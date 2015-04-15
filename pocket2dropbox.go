@@ -6,8 +6,9 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 
-	"github.com/k0kubun/pp"
+	// "github.com/k0kubun/pp"
 )
 
 type RSS struct {
@@ -36,7 +37,6 @@ func http_auth_get(url, user, pass string) ([]byte, error) {
 	}
 	request.SetBasicAuth(user, pass)
 
-	// create request for set cookies only
 	response, err := client.Do(request)
 	if err != nil {
 		return nil, err
@@ -53,7 +53,7 @@ func http_auth_get(url, user, pass string) ([]byte, error) {
 
 // ----------------------------------------------------------------------------
 func main() {
-	rssText, err := http_auth_get("http://getpocket.com/users/msoap/feed/unread", "USER", "***")
+	rssText, err := http_auth_get("http://getpocket.com/users/msoap/feed/unread", os.Getenv("POCKET_USER"), os.Getenv("POCKET_PASS"))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -64,9 +64,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	pp.Println(rss)
-
 	for i, item := range rss.Items.ItemList {
-		fmt.Printf("\t%d: %s %s (%s)\n", i, item.Title, item.Link, item.Date)
+		fmt.Printf("%d: %s %s (%s)\n", i, item.Title, item.Link, item.Date)
 	}
 }
