@@ -58,9 +58,8 @@ func main() {
 		log.Fatal(err)
 	}
 
-	var rss RSS
-	err = xml.Unmarshal(rssText, &rss)
-	if err != nil {
+	rss := RSS{}
+	if xml.Unmarshal(rssText, &rss) != nil {
 		log.Fatal(err)
 	}
 
