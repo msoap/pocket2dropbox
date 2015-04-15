@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/stacktic/dropbox"
 	// "github.com/k0kubun/pp"
 )
 
@@ -51,6 +52,15 @@ func http_auth_get(url, user, pass string) ([]byte, error) {
 	return body, nil
 }
 
+func upload_to_dropbox(src, dst string) error {
+	db := dropbox.NewDropbox()
+	db.SetAppInfo(os.Getenv("DB_CLIENTID"), os.Getenv("DB_CLIENTSECRET"))
+	db.SetAccessToken(os.Getenv("DB_TOKEN"))
+
+	_, err := db.UploadFile(src, dst, true, "")
+	return err
+}
+
 // ----------------------------------------------------------------------------
 func main() {
 	rssText, err := http_auth_get(
@@ -69,5 +79,10 @@ func main() {
 
 	for i, item := range rss.Items.ItemList {
 		fmt.Printf("%d: %s %s (%s)\n", i, item.Title, item.Link, item.Date)
+	}
+
+	err = upload_to_dropbox("pocket2dropbox.go", "2015/pocket2dropbox.go")
+	if err != nil {
+		log.Fatal(err)
 	}
 }
