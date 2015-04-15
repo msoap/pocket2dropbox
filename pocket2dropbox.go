@@ -53,7 +53,11 @@ func http_auth_get(url, user, pass string) ([]byte, error) {
 
 // ----------------------------------------------------------------------------
 func main() {
-	rssText, err := http_auth_get("http://getpocket.com/users/msoap/feed/unread", os.Getenv("POCKET_USER"), os.Getenv("POCKET_PASS"))
+	rssText, err := http_auth_get(
+		fmt.Sprintf("https://getpocket.com/users/%s/feed/unread", os.Getenv("POCKET_USER")),
+		os.Getenv("POCKET_USER"),
+		os.Getenv("POCKET_PASS"),
+	)
 	if err != nil {
 		log.Fatal(err)
 	}
