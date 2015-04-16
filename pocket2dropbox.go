@@ -16,6 +16,6 @@ func main() {
 	}
 
 	for i, article := range articles {
-		fmt.Printf("%d: %s %s (%s)\n", i, article.Title, article.Link, article.Date)
+		fmt.Printf("%d: %s %s (%s / %d)\n", i, article.Title, article.Link, article.Date, article.Timestamp)
 	}
 }
