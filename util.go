@@ -9,13 +9,16 @@ import (
 )
 
 // ----------------------------------------------------------------------------
-func http_auth_get(url, user, pass string) ([]byte, error) {
+func http_get(url, user, pass string) ([]byte, error) {
 	client := &http.Client{}
 	request, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, err
 	}
-	request.SetBasicAuth(user, pass)
+
+	if user != "" && pass != "" {
+		request.SetBasicAuth(user, pass)
+	}
 
 	response, err := client.Do(request)
 	if err != nil {
