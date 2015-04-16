@@ -13,6 +13,8 @@ import (
 )
 
 // ----------------------------------------------------------------------------
+
+// Article - one article from pocket
 type Article struct {
 	Title     string `xml:"title" json:"resolved_title"`
 	Link      string `xml:"link" json:"resolved_url"`
@@ -20,8 +22,10 @@ type Article struct {
 	Timestamp int64
 }
 
+// Articles - list
 type Articles []Article
 
+// PocketRSS - RSS XML struct
 type PocketRSS struct {
 	XMLName xml.Name `xml:"rss"`
 	Items   struct {
@@ -30,6 +34,7 @@ type PocketRSS struct {
 	} `xml:"channel"`
 }
 
+// PocketJSON - JSON struct
 type PocketJSON struct {
 	Since float32            `json:"since"`
 	Items map[string]Article `json:"list"`
