@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"os"
+	"reflect"
 
 	// "github.com/k0kubun/pp"
 )
@@ -34,6 +35,19 @@ func get_config() (Config, error) {
 
 	if err := json.Unmarshal(cfg_json, &cfg); err != nil {
 		return cfg, err
+	}
+
+	// If need get cfg from env
+	reflect_val := reflect.ValueOf(&cfg).Elem()
+	for i := 0; i < reflect_val.NumField(); i++ {
+		valueField := reflect_val.Field(i)
+		tag := reflect_val.Type().Field(i).Tag
+
+		// if empty string in json
+		env_value := os.Getenv(tag.Get("env"))
+		if tag.Get("env") != "" && valueField.String() == "" && env_value != "" {
+			valueField.SetString(env_value)
+		}
 	}
 
 	return cfg, nil
