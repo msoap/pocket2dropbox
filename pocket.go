@@ -12,6 +12,14 @@ import (
 	// "github.com/k0kubun/pp"
 )
 
+const (
+	// Pocket API URL for get articles
+	POKET_API_URL = "https://getpocket.com/v3/get?consumer_key=%s&access_token=%s&state=unread"
+
+	// Pocket RSS for get articles
+	POKET_RSS_URL = "https://getpocket.com/users/%s/feed/unread"
+)
+
 // ----------------------------------------------------------------------------
 
 // Article - one article from pocket
@@ -43,7 +51,7 @@ type PocketJSON struct {
 // ----------------------------------------------------------------------------
 func get_pocket_by_rss() (Articles, error) {
 	rssText, err := http_get(
-		fmt.Sprintf("https://getpocket.com/users/%s/feed/unread", os.Getenv("POCKET_USER")),
+		fmt.Sprintf(POKET_RSS_URL, os.Getenv("POCKET_USER")),
 		os.Getenv("POCKET_USER"),
 		os.Getenv("POCKET_PASS"),
 	)
@@ -73,7 +81,7 @@ func get_pocket_by_rss() (Articles, error) {
 // ----------------------------------------------------------------------------
 func get_pocket_by_api() (Articles, error) {
 	jsonText, err := http_get(
-		fmt.Sprintf("https://getpocket.com/v3/get?consumer_key=%s&access_token=%s&state=unread", os.Getenv("POCKET_KEY"), os.Getenv("POCKET_TOKEN")),
+		fmt.Sprintf(POKET_API_URL, os.Getenv("POCKET_KEY"), os.Getenv("POCKET_TOKEN")),
 		"",
 		"",
 	)
