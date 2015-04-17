@@ -30,7 +30,7 @@ const (
 // Article - one article from pocket
 type Article struct {
 	Title          string `xml:"title" json:"resolved_title"`
-	Link           string `xml:"link" json:"resolved_url"`
+	URL            string `xml:"link"  json:"resolved_url"`
 	Date           string `xml:"pubDate" json:"time_added"`
 	Timestamp      int64  `json:"timestamp"`
 	FileName       string `json:"filename"`          // local filename in cache
