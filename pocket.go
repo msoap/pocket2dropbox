@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
+	"io/ioutil"
 	"os"
 	"sort"
 	"strconv"
@@ -18,20 +19,33 @@ const (
 
 	// Pocket RSS for get articles
 	POKET_RSS_URL = "https://getpocket.com/users/%s/feed/unread"
+
+	// local info json filename
+	LOCAL_INFO_FILENAME = "pocket2dropbox_info.json"
+	LOCAL_INFO_PATH     = CONFIG_DIR + "/" + LOCAL_INFO_FILENAME
 )
 
 // ----------------------------------------------------------------------------
 
 // Article - one article from pocket
 type Article struct {
-	Title     string `xml:"title" json:"resolved_title"`
-	Link      string `xml:"link" json:"resolved_url"`
-	Date      string `xml:"pubDate" json:"time_added"`
-	Timestamp int64
+	Title          string `xml:"title" json:"resolved_title"`
+	Link           string `xml:"link" json:"resolved_url"`
+	Date           string `xml:"pubDate" json:"time_added"`
+	Timestamp      int64  `json:"timestamp"`
+	FileName       string `json:"filename"`          // local filename in cache
+	IsDownloaded   bool   `json:"is_downloaded"`     // download to cache
+	IsUploadedInDB bool   `json:"is_uploaded_in_db"` // uploaded to dropbox
 }
 
 // Articles - list
 type Articles []Article
+
+// InfoJSON - save local info about all articles
+type InfoJSON struct {
+	Timestamp int64    `json:"timestamp"` // last exec time
+	Items     Articles `json:"articles"`  // list of articles
+}
 
 // PocketRSS - RSS XML struct
 type PocketRSS struct {
@@ -107,6 +121,31 @@ func get_pocket_by_api(cfg Config) (Articles, error) {
 	sort.Sort(result)
 
 	return result, nil
+}
+
+// ----------------------------------------------------------------------------
+func save_articles_info(articles Articles, cfg Config) error {
+	info := InfoJSON{
+		Timestamp: time.Now().Unix(),
+		Items:     articles,
+	}
+	json_info, err := json.MarshalIndent(info, "", "  ")
+	if err != nil {
+		return err
+	}
+
+	local_info_path := os.Getenv("HOME") + "/" + LOCAL_INFO_PATH
+	err = ioutil.WriteFile(local_info_path, json_info, 0644)
+	if err != nil {
+		return err
+	}
+
+	err = upload_to_dropbox(local_info_path, LOCAL_INFO_FILENAME, cfg)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // ----------------------------------------------------------------------------

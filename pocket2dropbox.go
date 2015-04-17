@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/k0kubun/pp"
+	// "github.com/k0kubun/pp"
 )
 
 // ----------------------------------------------------------------------------
@@ -17,6 +17,11 @@ func main() {
 	articles, err := get_pocket_by_api(cfg)
 	if err != nil {
 		log.Fatal(err)
+	}
+
+	err = save_articles_info(articles, cfg)
+	if err != nil {
+		log.Println(err)
 	}
 
 	for i, article := range articles {

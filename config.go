@@ -10,7 +10,8 @@ import (
 )
 
 const (
-	CONFIG_FILE = ".config/pocket2dropbox.cfg"
+	CONFIG_DIR  = ".config"
+	CONFIG_PATH = CONFIG_DIR + "/pocket2dropbox.cfg"
 )
 
 // Config - configuration (tokens, secrets...)
@@ -28,7 +29,7 @@ type Config struct {
 // ----------------------------------------------------------------------------
 func get_config() (Config, error) {
 	cfg := Config{}
-	cfg_json, err := ioutil.ReadFile(os.Getenv("HOME") + "/" + CONFIG_FILE)
+	cfg_json, err := ioutil.ReadFile(os.Getenv("HOME") + "/" + CONFIG_PATH)
 	if err == nil {
 		if err := json.Unmarshal(cfg_json, &cfg); err != nil {
 			return cfg, err
@@ -58,7 +59,7 @@ func save_config(cfg Config) error {
 		return err
 	}
 
-	err = ioutil.WriteFile(os.Getenv("HOME")+"/"+CONFIG_FILE, json_cfg, 0600)
+	err = ioutil.WriteFile(os.Getenv("HOME")+"/"+CONFIG_PATH, json_cfg, 0600)
 	if err != nil {
 		return err
 	}
