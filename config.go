@@ -29,12 +29,10 @@ type Config struct {
 func get_config() (Config, error) {
 	cfg := Config{}
 	cfg_json, err := ioutil.ReadFile(os.Getenv("HOME") + "/" + CONFIG_FILE)
-	if err != nil {
-		return cfg, err
-	}
-
-	if err := json.Unmarshal(cfg_json, &cfg); err != nil {
-		return cfg, err
+	if err == nil {
+		if err := json.Unmarshal(cfg_json, &cfg); err != nil {
+			return cfg, err
+		}
 	}
 
 	// If need get cfg from env

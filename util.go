@@ -3,7 +3,6 @@ package main
 import (
 	"io/ioutil"
 	"net/http"
-	"os"
 
 	"github.com/stacktic/dropbox"
 )
@@ -35,10 +34,10 @@ func http_get(url, user, pass string) ([]byte, error) {
 }
 
 // ----------------------------------------------------------------------------
-func upload_to_dropbox(src, dst string) error {
+func upload_to_dropbox(src, dst string, cfg Config) error {
 	db := dropbox.NewDropbox()
-	db.SetAppInfo(os.Getenv("DB_CLIENTID"), os.Getenv("DB_CLIENTSECRET"))
-	db.SetAccessToken(os.Getenv("DB_TOKEN"))
+	db.SetAppInfo(cfg.DBClientId, cfg.DBClientSecret)
+	db.SetAccessToken(cfg.DBToken)
 
 	_, err := db.UploadFile(src, dst, true, "")
 	return err

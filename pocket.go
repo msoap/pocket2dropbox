@@ -79,9 +79,9 @@ func get_pocket_by_rss() (Articles, error) {
 }
 
 // ----------------------------------------------------------------------------
-func get_pocket_by_api() (Articles, error) {
+func get_pocket_by_api(cfg Config) (Articles, error) {
 	jsonText, err := http_get(
-		fmt.Sprintf(POKET_API_URL, os.Getenv("POCKET_KEY"), os.Getenv("POCKET_TOKEN")),
+		fmt.Sprintf(POKET_API_URL, cfg.PocketKey, cfg.PocketToken),
 		"",
 		"",
 	)
