@@ -9,11 +9,6 @@ import (
 	// "github.com/k0kubun/pp"
 )
 
-const (
-	CONFIG_DIR  = ".config"
-	CONFIG_PATH = CONFIG_DIR + "/pocket2dropbox.cfg"
-)
-
 // Config - configuration (tokens, secrets...)
 type Config struct {
 	// pocket settings
@@ -34,8 +29,6 @@ func get_config() (Config, error) {
 		if err := json.Unmarshal(cfg_json, &cfg); err != nil {
 			return cfg, err
 		}
-	} else {
-		return cfg, err
 	}
 
 	// If need get cfg from env

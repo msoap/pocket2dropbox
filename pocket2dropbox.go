@@ -9,6 +9,13 @@ import (
 
 const (
 	CACHE_DIR = ".cache/pocket2dropbox"
+
+	// local info json filename
+	CONFIG_DIR  = ".config"
+	CONFIG_PATH = CONFIG_DIR + "/pocket2dropbox.cfg"
+
+	LOCAL_INFO_FILENAME = "pocket2dropbox_info.json"
+	LOCAL_INFO_PATH     = CACHE_DIR + "/" + LOCAL_INFO_FILENAME
 )
 
 // ----------------------------------------------------------------------------
@@ -28,6 +35,7 @@ func main() {
 		log.Fatal(err)
 	}
 	articles = merge_local_and_remote_info(local_articles, articles)
+	hasChanges := false
 
 	for i, item := range articles {
 
@@ -39,6 +47,7 @@ func main() {
 			if err == nil {
 				item.FileName = file_name
 				item.IsDownloaded = true
+				hasChanges = true
 				log.Println("downloaded:", item.URL)
 			} else {
 				log.Println("download error:", err)
@@ -52,6 +61,7 @@ func main() {
 				log.Println("upload to dropbox error:", err)
 			} else {
 				item.IsUploadedInDB = true
+				hasChanges = true
 				log.Println("uploaded:", item.URL)
 			}
 		}
@@ -62,8 +72,12 @@ func main() {
 		}
 	}
 
-	err = save_articles_info(articles, cfg)
-	if err != nil {
-		log.Println(err)
+	if hasChanges {
+		err = save_articles_info(articles, cfg)
+		if err != nil {
+			log.Println(err)
+		}
+	} else {
+		log.Println("changes not found")
 	}
 }

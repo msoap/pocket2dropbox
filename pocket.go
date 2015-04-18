@@ -19,10 +19,6 @@ const (
 
 	// Pocket RSS for get articles
 	POKET_RSS_URL = "https://getpocket.com/users/%s/feed/unread"
-
-	// local info json filename
-	LOCAL_INFO_FILENAME = "pocket2dropbox_info.json"
-	LOCAL_INFO_PATH     = CONFIG_DIR + "/" + LOCAL_INFO_FILENAME
 )
 
 // ----------------------------------------------------------------------------
@@ -132,8 +128,6 @@ func load_articles_info(cfg Config) (Articles, error) {
 		if err := json.Unmarshal(json_info, &info); err != nil {
 			return nil, err
 		}
-	} else {
-		return nil, err
 	}
 
 	return info.Items, nil
