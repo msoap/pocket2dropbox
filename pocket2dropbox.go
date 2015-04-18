@@ -66,10 +66,6 @@ func main() {
 			}
 		}
 		articles[i] = item
-
-		if i == 2 {
-			break
-		}
 	}
 
 	if hasChanges {
