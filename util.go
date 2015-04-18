@@ -3,6 +3,8 @@ package main
 import (
 	"io/ioutil"
 	"net/http"
+	"net/url"
+	"regexp"
 
 	"github.com/stacktic/dropbox"
 )
@@ -41,4 +43,17 @@ func upload_to_dropbox(src, dst string, cfg Config) error {
 
 	_, err := db.UploadFile(src, dst, true, "")
 	return err
+}
+
+// ----------------------------------------------------------------------------
+func get_host(URL string) string {
+	url_object, err := url.Parse(URL)
+	if err != nil {
+		return ""
+	}
+
+	host := url_object.Host
+	host = regexp.MustCompile(`:\d+$`).ReplaceAllString(host, "")
+
+	return host
 }

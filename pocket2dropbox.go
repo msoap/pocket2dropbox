@@ -40,7 +40,14 @@ func main() {
 	for i, item := range articles {
 
 		if !item.IsDownloaded {
-			file_name := "article_" + time.Now().Format("2006-01-02_15-04-05") + ".html"
+			file_name := "article." + time.Now().Format("2006-01-02_15-04-05")
+
+			host := get_host(item.URL)
+			if host != "" {
+				file_name += "." + host
+			}
+			file_name += ".html"
+
 			local_html_name := os.Getenv("HOME") + "/" + CACHE_DIR + "/2015/" + file_name
 
 			log.Println("download:", item.URL)
