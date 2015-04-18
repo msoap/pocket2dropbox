@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"os/exec"
@@ -36,6 +37,9 @@ func main() {
 	}
 	articles = merge_local_and_remote_info(local_articles, articles)
 	hasChanges := false
+	year_str := time.Now().Format("2006")
+	local_html_path := fmt.Sprintf("%s/%s/%s", os.Getenv("HOME"), CACHE_DIR, year_str)
+	create_dir_if_need(local_html_path)
 
 	for i, item := range articles {
 
@@ -48,7 +52,7 @@ func main() {
 			}
 			file_name += ".html"
 
-			local_html_name := os.Getenv("HOME") + "/" + CACHE_DIR + "/2015/" + file_name
+			local_html_name := local_html_path + "/" + file_name
 
 			log.Println("download:", item.URL)
 			err = exec.Command("wgethtml.pl", "-j", "-a", local_html_name, item.URL).Run()
@@ -65,7 +69,7 @@ func main() {
 		}
 
 		if item.IsDownloaded && item.FileName != "" && !item.IsUploadedInDB {
-			local_html_name := os.Getenv("HOME") + "/" + CACHE_DIR + "/2015/" + item.FileName
+			local_html_name := local_html_path + "/" + item.FileName
 			err = upload_to_dropbox(local_html_name, "/2015/"+item.FileName, cfg)
 			if err != nil {
 				log.Println("upload to dropbox error:", err)

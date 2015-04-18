@@ -2,8 +2,10 @@ package main
 
 import (
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/url"
+	"os"
 	"regexp"
 
 	"github.com/stacktic/dropbox"
@@ -56,4 +58,14 @@ func get_host(URL string) string {
 	host = regexp.MustCompile(`:\d+$`).ReplaceAllString(host, "")
 
 	return host
+}
+
+// ----------------------------------------------------------------------------
+func create_dir_if_need(dir string) {
+	if _, err := os.Stat(dir); err != nil {
+		err = os.MkdirAll(dir, 0755)
+		if err != nil {
+			log.Fatal("create dir error:", dir)
+		}
+	}
 }
