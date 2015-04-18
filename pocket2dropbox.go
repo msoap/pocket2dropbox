@@ -43,12 +43,15 @@ func main() {
 			file_name := "article_" + time.Now().Format("2006-01-02_15-04-05") + ".html"
 			local_html_name := os.Getenv("HOME") + "/" + CACHE_DIR + "/2015/" + file_name
 
-			err = exec.Command("wgethtml.pl", "-a", local_html_name, item.URL).Run()
+			log.Println("download:", item.URL)
+			err = exec.Command("wgethtml.pl", "-j", "-a", local_html_name, item.URL).Run()
 			if err == nil {
-				item.FileName = file_name
-				item.IsDownloaded = true
-				hasChanges = true
-				log.Println("downloaded:", item.URL)
+				if _, err := os.Stat(local_html_name); err == nil {
+					item.FileName = file_name
+					item.IsDownloaded = true
+					hasChanges = true
+					log.Println("downloaded:", item.URL)
+				}
 			} else {
 				log.Println("download error:", err)
 			}
