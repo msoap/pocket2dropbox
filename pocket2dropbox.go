@@ -70,7 +70,7 @@ func main() {
 
 		if item.IsDownloaded && item.FileName != "" && !item.IsUploadedInDB {
 			local_html_name := local_html_path + "/" + item.FileName
-			err = upload_to_dropbox(local_html_name, "/2015/"+item.FileName, cfg)
+			err = upload_to_dropbox(local_html_name, "/"+year_str+"/"+item.FileName, cfg)
 			if err != nil {
 				log.Println("upload to dropbox error:", err)
 			} else {
