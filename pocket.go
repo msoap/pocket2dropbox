@@ -124,6 +124,22 @@ func get_pocket_by_api(cfg Config) (Articles, error) {
 }
 
 // ----------------------------------------------------------------------------
+func load_articles_info(cfg Config) (Articles, error) {
+	info := InfoJSON{}
+	local_info_path := os.Getenv("HOME") + "/" + LOCAL_INFO_PATH
+	json_info, err := ioutil.ReadFile(local_info_path)
+	if err == nil {
+		if err := json.Unmarshal(json_info, &info); err != nil {
+			return nil, err
+		}
+	} else {
+		return nil, err
+	}
+
+	return info.Items, nil
+}
+
+// ----------------------------------------------------------------------------
 func save_articles_info(articles Articles, cfg Config) error {
 	info := InfoJSON{
 		Timestamp: time.Now().Unix(),
@@ -146,6 +162,26 @@ func save_articles_info(articles Articles, cfg Config) error {
 	}
 
 	return nil
+}
+
+// ----------------------------------------------------------------------------
+func merge_local_and_remote_info(local_articles, remote_articles Articles) Articles {
+	local_as_map := make(map[string]Article, len(local_articles))
+	for _, item := range local_articles {
+		local_as_map[item.URL] = item
+	}
+
+	result := make(Articles, 0, len(remote_articles))
+	for _, item := range remote_articles {
+		if local_item, ok := local_as_map[item.URL]; ok {
+			item.FileName = local_item.FileName
+			item.IsDownloaded = local_item.IsDownloaded
+			item.IsUploadedInDB = local_item.IsUploadedInDB
+		}
+		result = append(result, item)
+	}
+
+	return result
 }
 
 // ----------------------------------------------------------------------------

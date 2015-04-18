@@ -18,10 +18,16 @@ func main() {
 		log.Fatal(err)
 	}
 
+	local_articles, err := load_articles_info(cfg)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	articles, err := get_pocket_by_api(cfg)
 	if err != nil {
 		log.Fatal(err)
 	}
+	articles = merge_local_and_remote_info(local_articles, articles)
 
 	for i, item := range articles {
 

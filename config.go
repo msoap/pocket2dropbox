@@ -34,6 +34,8 @@ func get_config() (Config, error) {
 		if err := json.Unmarshal(cfg_json, &cfg); err != nil {
 			return cfg, err
 		}
+	} else {
+		return cfg, err
 	}
 
 	// If need get cfg from env
