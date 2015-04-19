@@ -1,26 +1,22 @@
-pocket2dropbox
-==============
+#pocket2dropbox: <img src="https://raw.githubusercontent.com/msoap/msoap.github.com/master/img/pocket_icon.png" height="32" width="32"> ⇢ <img src="https://raw.githubusercontent.com/msoap/msoap.github.com/master/img/dropbox_icon.png" height="32" width="32">
 
 Backup [Pocket](http://getpocket.com/) articles to dropbox.
 
-Install
--------
+##Install
 
 From source:
 
     go get -u github.com/msoap/pocket2dropbox
     ln -s $GOPATH/bin/pocket2dropbox ~/bin/pocket2dropbox
 
-Usage
------
+##Usage
 
  * Get Pocket/Dorpbox app_id, keys and tokens - see links below.
  * Create config file.
  * Download wgethtml.pl to PATH dir.
  * Add to cron: `0 * * * * pocket2dropbox`
 
-Configuration
--------------
+##Configuration
 
 By config file `~/.config/pocket2dropbox.cfg` ([example](https://raw.githubusercontent.com/github.com/msoap/pocket2dropbox/misc/pocket2dropbox.cfg)):
 
@@ -43,13 +39,11 @@ or through environment vars:
 	DB_CLIENTSECRET
 	DB_TOKEN
 
-Dependencies
-------------
+##Dependencies
 
 [wgethtml.pl](https://gist.github.com/msoap/2567074) - for download html
 
-Links
------
+##Links
 
  * [Get pocket keys/tokens](https://getpocket.com/developer/docs/authentication)
  * [Get dropbox keys/tokens](https://www.dropbox.com/developers/apps/create)
@@ -57,8 +51,7 @@ Links
  * [Go client library for the Dropbox](https://github.com/stacktic/dropbox)
  * [Save html page with embedding css/js/images in file](https://gist.github.com/msoap/2567074)
 
-TODO
-----
+##TODO
 
  * Delete deleted articles in Pocket
  * Rewrite wgethtml.pl on Go
