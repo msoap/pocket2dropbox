@@ -14,10 +14,10 @@ import (
 )
 
 const (
-	// Pocket API URL for get articles
+	// POKET_API_URL - Pocket API URL for get articles
 	POKET_API_URL = "https://getpocket.com/v3/get?consumer_key=%s&access_token=%s&state=unread"
 
-	// Pocket RSS for get articles
+	// POKET_RSS_URL - Pocket RSS for get articles
 	POKET_RSS_URL = "https://getpocket.com/users/%s/feed/unread"
 )
 

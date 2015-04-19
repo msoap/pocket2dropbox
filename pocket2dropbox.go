@@ -9,14 +9,18 @@ import (
 )
 
 const (
+	// CACHE_DIR - for save local cache of articles in html
 	CACHE_DIR = ".cache/pocket2dropbox"
 
-	// local info json filename
-	CONFIG_DIR  = ".config"
+	// CONFIG_DIR - dir in HOME for config file
+	CONFIG_DIR = ".config"
+	// CONFIG_PATH - config file
 	CONFIG_PATH = CONFIG_DIR + "/pocket2dropbox.cfg"
 
+	// LOCAL_INFO_FILENAME - filename for with info about downloaded articles
 	LOCAL_INFO_FILENAME = "pocket2dropbox_info.json"
-	LOCAL_INFO_PATH     = CACHE_DIR + "/" + LOCAL_INFO_FILENAME
+	// LOCAL_INFO_PATH - file with info about downloaded articles
+	LOCAL_INFO_PATH = CACHE_DIR + "/" + LOCAL_INFO_FILENAME
 )
 
 // ----------------------------------------------------------------------------
