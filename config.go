@@ -5,8 +5,6 @@ import (
 	"io/ioutil"
 	"os"
 	"reflect"
-
-	// "github.com/k0kubun/pp"
 )
 
 // Config - configuration (tokens, secrets...)
