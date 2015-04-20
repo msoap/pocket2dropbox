@@ -14,7 +14,7 @@ type Config struct {
 	PocketToken string `json:"pocket_token" env:"POCKET_TOKEN"`
 
 	// Dropbox settings
-	DBClientId     string `json:"db_client_id"     env:"DB_CLIENTID"`
+	DBClientID     string `json:"db_client_id"     env:"DB_CLIENTID"`
 	DBClientSecret string `json:"db_client_secret" env:"DB_CLIENTSECRET"`
 	DBToken        string `json:"db_token"         env:"DB_TOKEN"`
 }
