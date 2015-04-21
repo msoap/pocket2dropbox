@@ -188,9 +188,17 @@ func merge_local_and_remote_info(local_articles, remote_articles Articles) (Arti
 			if item.IsFavorite != local_item.IsFavorite {
 				hasChanges = true
 			}
+			delete(local_as_map, item.URL) // for add later rest of local list
 		}
 		result = append(result, item)
 	}
+
+	// add rest local
+	for _, item := range local_as_map {
+		result = append(result, item)
+	}
+
+	sort.Sort(result)
 
 	return result, hasChanges
 }
