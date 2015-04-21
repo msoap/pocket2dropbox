@@ -9,6 +9,9 @@ import (
 )
 
 const (
+	// VERSION - app version
+	VERSION = 0.01
+
 	// CACHE_DIR - for save local cache of articles in html
 	CACHE_DIR = ".cache/pocket2dropbox"
 
@@ -39,13 +42,17 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	articles = merge_local_and_remote_info(local_articles, articles)
-	hasChanges := false
+
+	articles, hasChanges := merge_local_and_remote_info(local_articles, articles)
 	year_str := time.Now().Format("2006")
 	local_html_path := fmt.Sprintf("%s/%s/%s", os.Getenv("HOME"), CACHE_DIR, year_str)
 	create_dir_if_need(local_html_path)
 
 	for i, item := range articles {
+
+		if cfg.Favorites && !item.IsFavorite {
+			continue
+		}
 
 		if !item.IsDownloaded {
 			file_name := "article." + time.Now().Format("2006-01-02_15-04-05")

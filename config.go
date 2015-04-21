@@ -2,6 +2,8 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"reflect"
@@ -17,6 +19,9 @@ type Config struct {
 	DBClientID     string `json:"db_client_id"     env:"DB_CLIENTID"`
 	DBClientSecret string `json:"db_client_secret" env:"DB_CLIENTSECRET"`
 	DBToken        string `json:"db_token"         env:"DB_TOKEN"`
+
+	// save favorites articles only
+	Favorites bool `json:"favorites"`
 }
 
 // ----------------------------------------------------------------------------
@@ -40,6 +45,25 @@ func get_config() (Config, error) {
 		if tag.Get("env") != "" && valueField.String() == "" && env_value != "" {
 			valueField.SetString(env_value)
 		}
+	}
+
+	// command line options
+	favorites := flag.Bool("favorites", false, "save favorites articles only")
+	flag.Usage = func() {
+		fmt.Printf("usage: %s [options]\n", os.Args[0])
+		flag.PrintDefaults()
+		os.Exit(0)
+	}
+	version := flag.Bool("version", false, "get version")
+	flag.Parse()
+	if *version {
+		fmt.Println(VERSION)
+		os.Exit(0)
+	}
+
+	// only true value rewrite config value
+	if *favorites {
+		cfg.Favorites = true
 	}
 
 	return cfg, nil

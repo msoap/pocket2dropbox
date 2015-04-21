@@ -25,7 +25,8 @@ By config file `~/.config/pocket2dropbox.cfg` ([example](https://raw.githubuserc
         "pocket_token": "***",
         "db_client_id": "***",
         "db_client_secret": "***",
-        "db_token": "***"
+        "db_token": "***",
+        "favorites": false
     }
 
 or through environment vars:
@@ -38,6 +39,14 @@ or through environment vars:
 	DB_CLIENTID
 	DB_CLIENTSECRET
 	DB_TOKEN
+
+options:
+
+    pocket2dropbox [options]
+    options
+        -favorites : save favorites articles only
+        -version
+        -help
 
 ##Dependencies
 

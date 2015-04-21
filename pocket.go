@@ -23,13 +23,22 @@ const (
 
 // Article - one article from pocket
 type Article struct {
-	Title          string `xml:"title" json:"resolved_title"`
-	URL            string `xml:"link"  json:"resolved_url"`
-	Date           string `xml:"pubDate" json:"time_added"`
+	Title          string `json:"resolved_title" xml:"title"`
+	URL            string `json:"resolved_url" xml:"link"`
+	Date           string `json:"time_added" xml:"pubDate"`
+	IsFavorite     bool   `json:"favorite"`
 	Timestamp      int64  `json:"timestamp"`
 	FileName       string `json:"filename"`          // local filename in cache
 	IsDownloaded   bool   `json:"is_downloaded"`     // download to cache
 	IsUploadedInDB bool   `json:"is_uploaded_in_db"` // uploaded to dropbox
+}
+
+// ArticleAPI - one article from pocket (for parse API out)
+type ArticleAPI struct {
+	Title    string `json:"resolved_title" xml:"title"`
+	URL      string `json:"resolved_url" xml:"link"`
+	Date     string `json:"time_added" xml:"pubDate"`
+	Favorite string `json:"favorite"`
 }
 
 // Articles - list
@@ -50,10 +59,10 @@ type PocketRSS struct {
 	} `xml:"channel"`
 }
 
-// PocketJSON - JSON struct
-type PocketJSON struct {
-	Since float32            `json:"since"`
-	Items map[string]Article `json:"list"`
+// PocketAPI - JSON struct
+type PocketAPI struct {
+	Since float32               `json:"since"`
+	Items map[string]ArticleAPI `json:"list"`
 }
 
 // ----------------------------------------------------------------------------
@@ -97,20 +106,25 @@ func get_pocket_by_api(cfg Config) (Articles, error) {
 		return nil, err
 	}
 
-	raw_data := PocketJSON{}
+	raw_data := PocketAPI{}
 	if err := json.Unmarshal(jsonText, &raw_data); err != nil {
 		return nil, err
 	}
 
 	result := Articles{}
 	for _, item := range raw_data.Items {
+		article := Article{
+			Title:      item.Title,
+			URL:        item.URL,
+			IsFavorite: item.Favorite == "1",
+		}
 		timestamp, err := strconv.ParseInt(item.Date, 10, 64)
 		if err == nil {
-			item.Date = time.Unix(timestamp, 0).Format("2006-01-02 15:04:05")
-			item.Timestamp = timestamp
+			article.Date = time.Unix(timestamp, 0).Format("2006-01-02 15:04:05")
+			article.Timestamp = timestamp
 		}
 
-		result = append(result, item)
+		result = append(result, article)
 	}
 	sort.Sort(result)
 
@@ -157,23 +171,28 @@ func save_articles_info(articles Articles, cfg Config) error {
 }
 
 // ----------------------------------------------------------------------------
-func merge_local_and_remote_info(local_articles, remote_articles Articles) Articles {
+func merge_local_and_remote_info(local_articles, remote_articles Articles) (Articles, bool) {
 	local_as_map := make(map[string]Article, len(local_articles))
 	for _, item := range local_articles {
 		local_as_map[item.URL] = item
 	}
 
 	result := make(Articles, 0, len(remote_articles))
+	hasChanges := false
+
 	for _, item := range remote_articles {
 		if local_item, ok := local_as_map[item.URL]; ok {
 			item.FileName = local_item.FileName
 			item.IsDownloaded = local_item.IsDownloaded
 			item.IsUploadedInDB = local_item.IsUploadedInDB
+			if item.IsFavorite != local_item.IsFavorite {
+				hasChanges = true
+			}
 		}
 		result = append(result, item)
 	}
 
-	return result
+	return result, hasChanges
 }
 
 // ----------------------------------------------------------------------------
