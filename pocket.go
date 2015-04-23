@@ -185,9 +185,14 @@ func merge_local_and_remote_info(local_articles, remote_articles Articles) (Arti
 			item.FileName = local_item.FileName
 			item.IsDownloaded = local_item.IsDownloaded
 			item.IsUploadedInDB = local_item.IsUploadedInDB
-			if item.IsFavorite != local_item.IsFavorite {
+
+			if item.IsFavorite != local_item.IsFavorite ||
+				item.FileName != local_item.FileName ||
+				item.IsDownloaded != local_item.IsDownloaded ||
+				item.IsUploadedInDB != local_item.IsUploadedInDB {
 				hasChanges = true
 			}
+
 			delete(local_as_map, item.URL) // for add later rest of local list
 		}
 		result = append(result, item)
