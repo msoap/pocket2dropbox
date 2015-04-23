@@ -26,6 +26,7 @@ By config file `~/.config/pocket2dropbox.cfg` ([example](https://raw.githubuserc
         "db_client_id": "***",
         "db_client_secret": "***",
         "db_token": "***",
+        "get_since_days": 30,
         "favorites": false
     }
 
@@ -44,7 +45,8 @@ options:
 
     pocket2dropbox [options]
     options
-        -favorites : save favorites articles only
+        -favorites        : save favorites articles only
+        -get-since-days=N : get articles since this days
         -version
         -help
 
