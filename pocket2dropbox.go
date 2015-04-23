@@ -24,6 +24,9 @@ const (
 	LOCAL_INFO_FILENAME = "pocket2dropbox_info.json"
 	// LOCAL_INFO_PATH - file with info about downloaded articles
 	LOCAL_INFO_PATH = CACHE_DIR + "/" + LOCAL_INFO_FILENAME
+
+	// SLEEP_SECONDS - between articles
+	SLEEP_SECONDS = 60
 )
 
 // ----------------------------------------------------------------------------
@@ -76,6 +79,11 @@ func main() {
 				}
 			} else {
 				log.Println("download error:", err)
+			}
+
+			// between articles
+			if len(articles) > 0 {
+				time.Sleep(SLEEP_SECONDS * time.Second)
 			}
 		}
 
