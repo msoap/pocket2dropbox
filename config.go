@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"os"
 	"reflect"
+	"time"
 )
 
 // Config - configuration (tokens, secrets...)
@@ -22,6 +23,10 @@ type Config struct {
 
 	// save favorites articles only
 	Favorites bool `json:"favorites"`
+	// Download since days ago
+	GetSinceDays int `json:"get_since_days"`
+	// Download after this unix timestamp
+	GetSinceTimeStamp int64 `json:"-"`
 }
 
 // ----------------------------------------------------------------------------
@@ -49,6 +54,8 @@ func get_config() (Config, error) {
 
 	// command line options
 	favorites := flag.Bool("favorites", false, "save favorites articles only")
+	getSinceDays := flag.Int("get-since-days", 0, "download since days ago")
+
 	flag.Usage = func() {
 		fmt.Printf("usage: %s [options]\n", os.Args[0])
 		flag.PrintDefaults()
@@ -56,6 +63,7 @@ func get_config() (Config, error) {
 	}
 	version := flag.Bool("version", false, "get version")
 	flag.Parse()
+
 	if *version {
 		fmt.Println(VERSION)
 		os.Exit(0)
@@ -64,6 +72,13 @@ func get_config() (Config, error) {
 	// only true value rewrite config value
 	if *favorites {
 		cfg.Favorites = true
+	}
+
+	if *getSinceDays > 0 {
+		cfg.GetSinceDays = *getSinceDays
+	}
+	if cfg.GetSinceDays > 0 {
+		cfg.GetSinceTimeStamp = time.Now().Unix() - int64(cfg.GetSinceDays*3600*24)
 	}
 
 	return cfg, nil

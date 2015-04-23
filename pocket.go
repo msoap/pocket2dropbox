@@ -13,7 +13,7 @@ import (
 
 const (
 	// POKET_API_URL - Pocket API URL for get articles
-	POKET_API_URL = "https://getpocket.com/v3/get?consumer_key=%s&access_token=%s&state=unread"
+	POKET_API_URL = "https://getpocket.com/v3/get?consumer_key=%s&access_token=%s&since=%d&state=all"
 
 	// POKET_RSS_URL - Pocket RSS for get articles
 	POKET_RSS_URL = "https://getpocket.com/users/%s/feed/unread"
@@ -98,7 +98,7 @@ func get_pocket_by_rss() (Articles, error) {
 // ----------------------------------------------------------------------------
 func get_pocket_by_api(cfg Config) (Articles, error) {
 	jsonText, err := http_get(
-		fmt.Sprintf(POKET_API_URL, cfg.PocketKey, cfg.PocketToken),
+		fmt.Sprintf(POKET_API_URL, cfg.PocketKey, cfg.PocketToken, cfg.GetSinceTimeStamp),
 		"",
 		"",
 	)
@@ -113,6 +113,10 @@ func get_pocket_by_api(cfg Config) (Articles, error) {
 
 	result := Articles{}
 	for _, item := range raw_data.Items {
+		if item.URL == "" {
+			continue
+		}
+
 		article := Article{
 			Title:      item.Title,
 			URL:        item.URL,
