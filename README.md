@@ -1,4 +1,4 @@
-#pocket2dropbox: <img src="https://raw.githubusercontent.com/msoap/msoap.github.com/master/img/pocket_icon.png" height="32" width="32"> ⇢ <img src="https://raw.githubusercontent.com/msoap/msoap.github.com/master/img/dropbox_icon.png" height="32" width="32">
+#pocket2dropbox: <img src="https://raw.githubusercontent.com/msoap/pocket2dropbox/misc/img/pocket_icon.png" height="32" width="32"> ⇢ <img src="https://raw.githubusercontent.com/msoap/pocket2dropbox/misc/img/dropbox_icon.png" height="32" width="32">
 
 Backup [Pocket](http://getpocket.com/) articles to dropbox.
 
